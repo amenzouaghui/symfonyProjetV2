@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block title %}Accueil — SymHome{% endblock %}
+{% block body %}
+<div style="color:white; text-align:center; padding:100px 20px;">
+    <h1 style="color:#c9a96e; font-size:3rem;">🏠 SymHome</h1>
+    
+    {% if app.user %}
+        <p style="font-size:1.2rem; margin-top:20px;">Bienvenue {{ app.user.prenom }} !</p>
+        <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+    {% else %}
+        <p style="font-size:1.2rem; margin-top:20px;">Bienvenue sur SymHome !</p>
+        <a href="{{ path('app_login') }}" style="color:#c9a96e;">Se connecter</a>
+    {% endif %}
+</div>
+{% endblock %}

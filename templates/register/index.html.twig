@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% block title %}Créer un compte — SymHome{% endblock %}
+{% block body %}
+<div class="auth-wrapper" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+     url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1200') center/cover;">
+  <div class="auth-card" style="background: rgba(40,30,20,0.85); color: white;">
+    <h1 class="register-title">Créer un compte</h1>
+
+    {{ form_start(registrationForm) }}
+      <div class="form-row">
+        <div class="form-group">
+          {{ form_label(registrationForm.nom) }}
+          {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+          {{ form_errors(registrationForm.nom) }}
+        </div>
+        <div class="form-group">
+          {{ form_label(registrationForm.prenom) }}
+          {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control'}}) }}
+          {{ form_errors(registrationForm.prenom) }}
+        </div>
+      </div>
+      <div class="form-group">
+        {{ form_label(registrationForm.email) }}
+        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(registrationForm.email) }}
+      </div>
+      <div class="form-group">
+        {{ form_label(registrationForm.telephone) }}
+        {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control'}}) }}
+      </div>
+      <div class="form-group">
+        {{ form_label(registrationForm.adresse) }}
+        {{ form_widget(registrationForm.adresse, {'attr': {'class': 'form-control'}}) }}
+      </div>
+      <div class="form-group">
+        {{ form_label(registrationForm.plainPassword) }}
+        {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'form-control'}}) }}
+        {{ form_errors(registrationForm.plainPassword) }}
+      </div>
+      <div class="form-check">
+        {{ form_widget(registrationForm.agreeTerms) }}
+        {{ form_label(registrationForm.agreeTerms) }}
+        {{ form_errors(registrationForm.agreeTerms) }}
+      </div>
+      <button type="submit" class="btn-login">Créer mon compte</button>
+    {{ form_end(registrationForm) }}
+
+    <p class="text-center mt-3">
+      Déjà un compte ? <a href="{{ path('app_login') }}">Se connecter</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

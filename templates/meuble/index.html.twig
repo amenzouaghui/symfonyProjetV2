@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+{% block title %}Nos Meubles — SymHome{% endblock %}
+
+{% block body %}
+
+{# NAVBAR #}
+<nav style="background:#1a1a2e; padding:15px 40px; display:flex; justify-content:space-between; align-items:center;">
+    <a href="{{ path('app_meubles') }}" style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
+        🏠 SymHome
+    </a>
+    <div style="color:white;">
+        Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
+        <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+    </div>
+</nav>
+
+{# HERO #}
+<div style="background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6)),
+     url('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=1400') center/cover;
+     padding:60px 20px; text-align:center;">
+    <h1 style="color:white; font-size:2.5rem;">Découvrez nos meubles</h1>
+    <p style="color:#c9a96e; font-size:1.1rem;">Qualité & élégance pour votre intérieur</p>
+</div>
+
+{# RECHERCHE #}
+<div style="background:#f8f5f0; padding:30px 40px;">
+    <form method="get" action="{{ path('app_meubles') }}"
+          style="display:flex; gap:15px; flex-wrap:wrap; max-width:900px; margin:0 auto;">
+
+        <input type="text" name="search" value="{{ search }}"
+               placeholder="🔍 Rechercher un meuble..."
+               style="flex:2; padding:12px 16px; border:2px solid #ddd; border-radius:10px;
+                      font-size:1rem; outline:none;">
+
+        <select name="categorie"
+                style="flex:1; padding:12px 16px; border:2px solid #ddd; border-radius:10px;
+                       font-size:1rem; background:white; outline:none;">
+            <option value="">Toutes les catégories</option>
+            {% for cat in categories %}
+                {% if categorieId == cat.id|number_format(0) %}selected{% endif %}
+                    {{ cat.nom }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <button type="submit"
+                style="padding:12px 25px; background:#c9a96e; color:white; border:none;
+                       border-radius:10px; font-weight:bold; cursor:pointer; font-size:1rem;">
+            Rechercher
+        </button>
+
+        {% if search or categorieId %}
+        <a href="{{ path('app_meubles') }}"
+           style="padding:12px 20px; background:#eee; color:#333; border-radius:10px;
+                  text-decoration:none; font-size:1rem;">
+            ✕ Effacer
+        </a>
+        {% endif %}
+    </form>
+</div>
+
+{# RÉSULTATS #}
+<div style="padding:30px 40px; background:#f8f5f0; min-height:60vh;">
+    <p style="color:#888; margin-bottom:20px;">
+        {{ meubles|length }} meuble(s) trouvé(s)
+    </p>
+
+    {% if meubles is empty %}
+        <div style="text-align:center; padding:60px; color:#aaa;">
+            <p style="font-size:3rem;">🛋️</p>
+            <p style="font-size:1.2rem;">Aucun meuble trouvé</p>
+        </div>
+    {% else %}
+        <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px,1fr)); gap:25px;">
+            {% for meuble in meubles %}
+            <div style="background:white; border-radius:16px; overflow:hidden;
+                        box-shadow:0 4px 15px rgba(0,0,0,0.08); transition:0.3s;"
+                 onmouseover="this.style.transform='translateY(-5px)'"
+                 onmouseout="this.style.transform='translateY(0)'">
+
+                {# IMAGE #}
+     {% if meuble.image %}
+    <img src="{{ meuble.image }}"
+         alt="{{ meuble.nom }}"
+         style="width:100%; height:200px; object-fit:cover;">
+{% else %}
+    <div style="width:100%; height:200px; background:#f0ece4;
+                display:flex; align-items:center; justify-content:center;
+                font-size:3rem;">🛋️</div>
+{% endif %}
+
+                {# INFOS #}
+                <div style="padding:20px;">
+                    {% if meuble.categorie %}
+                        <span style="background:#f0ece4; color:#c9a96e; padding:4px 10px;
+                                     border-radius:20px; font-size:0.8rem; font-weight:600;">
+                            {{ meuble.categorie.nom }}
+                        </span>
+                    {% endif %}
+
+                    <h3 style="margin:10px 0 8px; color:#1a1a2e; font-size:1.1rem;">
+                        {{ meuble.nom }}
+                    </h3>
+
+                    <p style="color:#888; font-size:0.9rem; margin-bottom:15px;">
+                        {{ meuble.description|slice(0,80) }}{% if meuble.description|length > 80 %}...{% endif %}
+                    </p>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="color:#c9a96e; font-size:1.3rem; font-weight:bold;">
+                            {{ meuble.prix }} TND
+                        </span>
+                        <span style="color:{% if meuble.stock > 0 %}#27ae60{% else %}#e74c3c{% endif %};
+                                     font-size:0.85rem;">
+                            {% if meuble.stock > 0 %}✅ En stock{% else %}❌ Rupture{% endif %}
+                        </span>
+                    </div>
+
+                    <button style="width:100%; margin-top:15px; padding:10px; background:#1a1a2e;
+                                   color:white; border:none; border-radius:8px; cursor:pointer;
+                                   font-weight:bold; transition:0.2s;"
+                            onmouseover="this.style.background='#c9a96e'"
+                            onmouseout="this.style.background='#1a1a2e'">
+                        🛒 Ajouter au panier
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
