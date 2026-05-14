@@ -1,0 +1,119 @@
+{% extends 'base.html.twig' %}
+{% block title %}{{ meuble.nom }} — SymHome{% endblock %}
+
+{% block body %}
+
+{# NAVBAR #}
+<nav style="background:#1a1a2e; padding:15px 40px; display:flex;
+            justify-content:space-between; align-items:center;">
+    <a href="{{ path('app_meubles') }}"
+       style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
+        🏠 SymHome
+    </a>
+    <div style="display:flex; align-items:center; gap:20px;">
+        <a href="{{ path('app_panier') }}"
+           style="color:white; text-decoration:none; font-size:1.1rem;">
+            🛒
+            {% set panierCount = app.session.get('panier') %}
+            {% if panierCount %}
+                <span style="background:#c9a96e; color:white; border-radius:50%;
+                             padding:2px 7px; font-size:0.8rem;">
+                    {{ panierCount|length }}
+                </span>
+            {% endif %}
+        </a>
+        <span style="color:white;">
+            Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
+            <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+        </span>
+    </div>
+</nav>
+
+{# BREADCRUMB #}
+<div style="background:#f8f5f0; padding:12px 40px; font-size:0.9rem; color:#888;">
+    <a href="{{ path('app_meubles') }}" style="color:#c9a96e;">← Retour aux meubles</a>
+    &nbsp;/&nbsp; {{ meuble.nom }}
+</div>
+
+{# DETAIL #}
+<div style="background:#f8f5f0; min-height:80vh; padding:40px;">
+    <div style="max-width:900px; margin:0 auto; background:white;
+                border-radius:16px; overflow:hidden;
+                box-shadow:0 4px 20px rgba(0,0,0,0.1);
+                display:flex; flex-wrap:wrap;">
+
+        {# IMAGE #}
+        <div style="flex:1; min-width:300px;">
+            {% if meuble.image %}
+                <img src="{{ meuble.image }}" alt="{{ meuble.nom }}"
+                     style="width:100%; height:400px; object-fit:cover;">
+            {% else %}
+                <div style="width:100%; height:400px; background:#f0ece4;
+                            display:flex; align-items:center;
+                            justify-content:center; font-size:5rem;">🛋️</div>
+            {% endif %}
+        </div>
+
+        {# INFOS #}
+        <div style="flex:1; min-width:300px; padding:40px;">
+
+            {% if meuble.categorie %}
+                <span style="background:#f0ece4; color:#c9a96e; padding:5px 12px;
+                             border-radius:20px; font-size:0.85rem; font-weight:600;">
+                    {{ meuble.categorie.nom }}
+                </span>
+            {% endif %}
+
+            <h1 style="color:#1a1a2e; margin:15px 0 10px; font-size:1.8rem;">
+                {{ meuble.nom }}
+            </h1>
+
+            <p style="color:#888; font-size:1rem; line-height:1.6; margin-bottom:20px;">
+                {{ meuble.description }}
+            </p>
+
+            <div style="font-size:2rem; font-weight:bold; color:#c9a96e; margin-bottom:15px;">
+                {{ meuble.prix }} TND
+            </div>
+
+            <div style="margin-bottom:25px;">
+                {% if meuble.stock > 0 %}
+                    <span style="color:#27ae60; font-weight:600;">
+                        ✅ En stock ({{ meuble.stock }} disponibles)
+                    </span>
+                {% else %}
+                    <span style="color:#e74c3c; font-weight:600;">
+                        ❌ Rupture de stock
+                    </span>
+                {% endif %}
+            </div>
+
+            {% if meuble.stock > 0 %}
+            <form method="post" action="#">
+                <div style="display:flex; align-items:center; gap:15px; margin-bottom:20px;">
+                    <label style="color:#555; font-weight:500;">Quantité :</label>
+                    <input type="number" name="quantite" value="1" min="1" max="{{ meuble.stock }}"
+                           style="width:70px; padding:8px; border:2px solid #ddd;
+                                  border-radius:8px; font-size:1rem; text-align:center;">
+                </div>
+                <button type="submit"
+                        style="width:100%; padding:15px; background:#c9a96e; color:white;
+                               border:none; border-radius:10px; font-size:1.1rem;
+                               font-weight:bold; cursor:pointer; transition:0.2s;"
+                        onmouseover="this.style.background='#b8935a'"
+                        onmouseout="this.style.background='#c9a96e'">
+                    🛒 Ajouter au panier
+                </button>
+            </form>
+            {% endif %}
+
+            <a href="{{ path('app_meubles') }}"
+               style="display:block; margin-top:15px; text-align:center;
+                      color:#888; text-decoration:none; font-size:0.95rem;">
+                ← Continuer mes achats
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

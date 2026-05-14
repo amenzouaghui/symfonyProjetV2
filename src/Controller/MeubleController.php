@@ -29,4 +29,19 @@ class MeubleController extends AbstractController
             'categorieId' => $categorieId,
         ]);
     }
+    #[Route('/meubles/{id}', name: 'app_meuble_detail', requirements: ['id' => '\d+'])]
+public function detail(int $id, MeubleRepository $meubleRepo): Response
+{
+    $meuble = $meubleRepo->find($id);
+
+    if (!$meuble) {
+        throw $this->createNotFoundException('Meuble introuvable');
+    }
+
+    return $this->render('meuble/detail.html.twig', [
+        'meuble' => $meuble,
+    ]);
+}
+
+
 }

@@ -4,7 +4,7 @@ namespace App\Entity;
 
 use App\Repository\CategorieRepository;
 use Doctrine\ORM\Mapping as ORM;
-
+#[ORM\Table(name: 'categorie')]  
 #[ORM\Entity(repositoryClass: CategorieRepository::class)]
 class Categorie
 {

@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -176,6 +178,58 @@ private ?string $telephone = null;
 public function setTelephone(?string $telephone): static
 {
     $this->telephone = $telephone;
+
+    return $this;
+}
+#[ORM\Column]
+private ?bool $isActive = null;
+
+#[ORM\Column(type: 'datetime_immutable', nullable: true)]
+private ?\DateTimeImmutable $createdAt = null;
+
+/**
+ * @var Collection<int, Avis>
+ */
+#[ORM\OneToMany(targetEntity: Avis::class, mappedBy: 'user')]
+private Collection $avis;
+
+public function __construct()
+{
+    $this->avis = new ArrayCollection();
+}
+
+public function isActive(): ?bool { return $this->isActive; }
+public function setIsActive(bool $isActive): static { $this->isActive = $isActive; return $this; }
+
+public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+public function setCreatedAt(?\DateTimeImmutable $createdAt): static { $this->createdAt = $createdAt; return $this; }
+
+/**
+ * @return Collection<int, Avis>
+ */
+public function getAvis(): Collection
+{
+    return $this->avis;
+}
+
+public function addAvi(Avis $avi): static
+{
+    if (!$this->avis->contains($avi)) {
+        $this->avis->add($avi);
+        $avi->setUser($this);
+    }
+
+    return $this;
+}
+
+public function removeAvi(Avis $avi): static
+{
+    if ($this->avis->removeElement($avi)) {
+        // set the owning side to null (unless already changed)
+        if ($avi->getUser() === $this) {
+            $avi->setUser(null);
+        }
+    }
 
     return $this;
 }

@@ -34,4 +34,8 @@ class MeubleRepository extends ServiceEntityRepository
                   ->getQuery()
                   ->getResult();
     }
+    public function findById(int $id): ?Meuble
+{
+    return $this->find($id);
+}
 }

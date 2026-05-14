@@ -3,14 +3,28 @@
 
 {% block body %}
 
-{# NAVBAR #}
-<nav style="background:#1a1a2e; padding:15px 40px; display:flex; justify-content:space-between; align-items:center;">
-    <a href="{{ path('app_meubles') }}" style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
+<nav style="background:#1a1a2e; padding:15px 40px; display:flex;
+            justify-content:space-between; align-items:center;">
+    <a href="{{ path('app_meubles') }}"
+       style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
         🏠 SymHome
     </a>
-    <div style="color:white;">
-        Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
-        <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+    <div style="display:flex; align-items:center; gap:20px;">
+        <a href="{{ path('app_panier') }}"
+           style="color:white; text-decoration:none; font-size:1.1rem;">
+            🛒
+            {% set panierCount = app.session.get('panier') %}
+            {% if panierCount %}
+                <span style="background:#c9a96e; color:white; border-radius:50%;
+                             padding:2px 7px; font-size:0.8rem;">
+                    {{ panierCount|length }}
+                </span>
+            {% endif %}
+        </a>
+        <span style="color:white;">
+            Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
+            <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+        </span>
     </div>
 </nav>
 
@@ -32,16 +46,16 @@
                style="flex:2; padding:12px 16px; border:2px solid #ddd; border-radius:10px;
                       font-size:1rem; outline:none;">
 
-        <select name="categorie"
-                style="flex:1; padding:12px 16px; border:2px solid #ddd; border-radius:10px;
-                       font-size:1rem; background:white; outline:none;">
-            <option value="">Toutes les catégories</option>
-            {% for cat in categories %}
-                {% if categorieId == cat.id|number_format(0) %}selected{% endif %}
-                    {{ cat.nom }}
-                </option>
-            {% endfor %}
-        </select>
+ <select name="categorie"
+        style="flex:1; padding:12px 16px; border:2px solid #ddd; border-radius:10px;
+               font-size:1rem; background:white; outline:none;">
+    <option value="">Toutes les catégories</option>
+    {% for cat in categories %}
+        <option value="{{ cat.id }}" {% if categorieId == cat.id ~ '' %}selected{% endif %}>
+            {{ cat.nom }}
+        </option>
+    {% endfor %}
+</select>
 
         <button type="submit"
                 style="padding:12px 25px; background:#c9a96e; color:white; border:none;
@@ -115,14 +129,30 @@
                             {% if meuble.stock > 0 %}✅ En stock{% else %}❌ Rupture{% endif %}
                         </span>
                     </div>
+                    
+                    <a href="{{ path('app_meuble_detail', {'id': meuble.id}) }}"
+   style="display:block; width:100%; margin-top:10px; padding:10px;
+          background:#1a1a2e; color:white; border:none; border-radius:8px;
+          cursor:pointer; font-weight:bold; text-align:center;
+          text-decoration:none; transition:0.2s;"
+   onmouseover="this.style.background='#c9a96e'"
+   onmouseout="this.style.background='#1a1a2e'">
+    👁️ Voir détail
+</a>
 
-                    <button style="width:100%; margin-top:15px; padding:10px; background:#1a1a2e;
-                                   color:white; border:none; border-radius:8px; cursor:pointer;
-                                   font-weight:bold; transition:0.2s;"
-                            onmouseover="this.style.background='#c9a96e'"
-                            onmouseout="this.style.background='#1a1a2e'">
-                        🛒 Ajouter au panier
-                    </button>
+
+
+<form method="post" action="{{ path('app_panier_ajouter', {'id': meuble.id}) }}">
+    <input type="hidden" name="quantite" value="1">
+    <button type="submit"
+            style="width:100%; margin-top:8px; padding:10px; background:#c9a96e;
+                   color:white; border:none; border-radius:8px; cursor:pointer;
+                   font-weight:bold; transition:0.2s;"
+            onmouseover="this.style.background='#b8935a'"
+            onmouseout="this.style.background='#c9a96e'">
+        🛒 Ajouter au panier
+    </button>
+</form>
                 </div>
             </div>
             {% endfor %}
