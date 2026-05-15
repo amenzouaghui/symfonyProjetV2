@@ -1,8 +1,10 @@
 security:
+    # Hashage du mot de passe
     password_hashers:
         App\Entity\User:
             algorithm: auto
 
+    # Fournisseur d'utilisateurs (connexion par email)
     providers:
         app_user_provider:
             entity:
@@ -10,27 +12,39 @@ security:
                 property: email
 
     firewalls:
+        # Pas de sécurité pour les assets
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
         main:
             lazy: true
             provider: app_user_provider
-            
+
+            # Formulaire de connexion
             form_login:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-                default_target_path: app_meubles
+                default_target_path: app_meubles  # user normal → meubles
+
+            # Déconnexion
             logout:
                 path: app_logout
-                target: app_login
+                target: app_login  # après logout → login
+
+            # Se souvenir de moi
             remember_me:
                 secret: '%kernel.secret%'
-                lifetime: 604800
+                lifetime: 604800  # 7 jours
 
+    # Contrôle d'accès par URL
     access_control:
-        - { path: ^/login, roles: PUBLIC_ACCESS }
-        - { path: ^/register, roles: PUBLIC_ACCESS }
-        - { path: ^/meubles, roles: ROLE_USER }
-        - { path: ^/, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }       # tout le monde
+        - { path: ^/register, roles: PUBLIC_ACCESS }    # tout le monde
+        - { path: ^/admin, roles: ROLE_ADMIN }          # admin seulement
+        - { path: ^/meubles, roles: ROLE_USER }         # connecté seulement
+        - { path: ^/panier, roles: ROLE_USER }          # connecté seulement
+        - { path: ^/commande, roles: ROLE_USER }        # connecté seulement
+        - { path: ^/commandes, roles: ROLE_USER }       # connecté seulement
+        - { path: ^/, roles: PUBLIC_ACCESS }            # tout le monde

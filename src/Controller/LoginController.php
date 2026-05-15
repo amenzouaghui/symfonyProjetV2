@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,14 +13,20 @@ class LoginController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
+            // ✅ Admin → espace admin
+            if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
+                return $this->redirectToRoute('app_admin_dashboard');
+            }
+            // ✅ User normal → meubles
+            return $this->redirectToRoute('app_meubles');
         }
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render('login/index.html.twig', [
             'last_username' => $lastUsername,
-            'error' => $error,
+            'error'         => $error,
         ]);
     }
 
