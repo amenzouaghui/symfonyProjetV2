@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+{% block title %}Commande confirmée — SymHome{% endblock %}
+
+{% block body %}
+
+<nav style="background:#1a1a2e; padding:15px 40px; display:flex;
+            justify-content:space-between; align-items:center;">
+    <a href="{{ path('app_meubles') }}"
+       style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
+        🏠 SymHome
+    </a>
+    <div style="color:white;">
+        Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
+        <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+    </div>
+</nav>
+
+<div style="background:#f8f5f0; min-height:80vh; padding:40px;">
+    <div style="max-width:600px; margin:0 auto; text-align:center;">
+
+        <div style="background:white; border-radius:16px; padding:50px;
+                    box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+
+            <div style="font-size:4rem; margin-bottom:20px;">🎉</div>
+
+            <h1 style="color:#27ae60; margin-bottom:15px;">
+                Commande confirmée !
+            </h1>
+
+            <p style="color:#888; font-size:1rem; margin-bottom:10px;">
+                Votre numéro de commande :
+            </p>
+
+            <div style="background:#f0ece4; border-radius:10px; padding:15px;
+                        margin-bottom:25px;">
+                <span style="font-size:1.3rem; font-weight:bold; color:#c9a96e;">
+                    {{ commande.numero }}
+                </span>
+            </div>
+
+            <p style="color:#555; margin-bottom:10px;">
+                Total payé :
+                <strong style="color:#c9a96e;">
+                    {{ commande.total|number_format(2, '.', ' ') }} TND
+                </strong>
+            </p>
+
+            <p style="color:#888; font-size:0.9rem; margin-bottom:30px;">
+                Statut : <span style="color:#27ae60; font-weight:bold;">✅ Terminée</span>
+            </p>
+
+            <a href="{{ path('app_meubles') }}"
+               style="display:inline-block; padding:14px 30px; background:#c9a96e;
+                      color:white; border-radius:10px; text-decoration:none;
+                      font-weight:bold; font-size:1rem;">
+                🏠 Continuer mes achats
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

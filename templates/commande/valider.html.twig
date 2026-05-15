@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+{% block title %}Valider ma commande — SymHome{% endblock %}
+
+{% block body %}
+
+<nav style="background:#1a1a2e; padding:15px 40px; display:flex;
+            justify-content:space-between; align-items:center;">
+    <a href="{{ path('app_meubles') }}"
+       style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
+        🏠 SymHome
+    </a>
+    <div style="color:white;">
+        Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
+        <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+    </div>
+</nav>
+
+<div style="background:#f8f5f0; min-height:80vh; padding:40px;">
+    <div style="max-width:700px; margin:0 auto;">
+
+        <h1 style="color:#1a1a2e; margin-bottom:30px;">✅ Valider ma commande</h1>
+
+        {# MESSAGES #}
+        {% for message in app.flashes('error') %}
+            <div style="background:#fde8e8; color:#c0392b; padding:12px 16px;
+                        border-radius:8px; margin-bottom:20px;">{{ message }}</div>
+        {% endfor %}
+
+        {# RÉCAPITULATIF #}
+        <div style="background:white; border-radius:16px; padding:25px;
+                    margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+            <h2 style="color:#1a1a2e; margin-bottom:20px; font-size:1.2rem;">
+                📋 Récapitulatif
+            </h2>
+
+            {% for item in panierData %}
+            <div style="display:flex; justify-content:space-between;
+                        padding:10px 0; border-bottom:1px solid #f0f0f0;">
+                <span style="color:#555;">
+                    {{ item.meuble.nom }} × {{ item.quantite }}
+                </span>
+                <span style="color:#c9a96e; font-weight:bold;">
+                    {{ item.sousTotal|number_format(2, '.', ' ') }} TND
+                </span>
+            </div>
+            {% endfor %}
+
+            <div style="display:flex; justify-content:space-between;
+                        padding:15px 0 0; margin-top:10px;">
+                <span style="font-size:1.2rem; font-weight:bold; color:#1a1a2e;">
+                    Total :
+                </span>
+                <span style="font-size:1.5rem; font-weight:bold; color:#c9a96e;">
+                    {{ total|number_format(2, '.', ' ') }} TND
+                </span>
+            </div>
+        </div>
+
+        {# FORMULAIRE CODE #}
+        <div style="background:white; border-radius:16px; padding:25px;
+                    box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+            <h2 style="color:#1a1a2e; margin-bottom:10px; font-size:1.2rem;">
+                🔐 Code de validation
+            </h2>
+
+            <div style="background:#f0ece4; border-radius:10px; padding:15px;
+                        text-align:center; margin-bottom:20px;">
+                <p style="color:#888; font-size:0.9rem; margin-bottom:5px;">
+                    Votre code de validation :
+                </p>
+                <span style="font-size:2.5rem; font-weight:bold;
+                             color:#c9a96e; letter-spacing:8px;">
+                    {{ code }}
+                </span>
+            </div>
+
+            <form method="post" action="{{ path('app_commande_confirmer') }}">
+                <div style="margin-bottom:20px;">
+                    <label style="color:#555; font-weight:500; display:block; margin-bottom:8px;">
+                        Entrez le code ci-dessus :
+                    </label>
+                    <input type="text" name="code_validation"
+                           placeholder="Ex: 123456" maxlength="6"
+                           style="width:100%; padding:14px; border:2px solid #ddd;
+                                  border-radius:10px; font-size:1.5rem; text-align:center;
+                                  letter-spacing:8px; outline:none;"
+                           required>
+                </div>
+
+                <div style="display:flex; gap:15px;">
+                    <a href="{{ path('app_panier') }}"
+                       style="flex:1; padding:14px; background:#eee; color:#333;
+                              border-radius:10px; text-align:center;
+                              text-decoration:none; font-weight:bold;">
+                        ← Retour
+                    </a>
+                    <button type="submit"
+                            style="flex:2; padding:14px; background:#c9a96e; color:white;
+                                   border:none; border-radius:10px; font-size:1rem;
+                                   font-weight:bold; cursor:pointer;">
+                        ✅ Confirmer la commande
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

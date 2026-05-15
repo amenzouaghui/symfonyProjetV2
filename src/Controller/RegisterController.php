@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -19,7 +20,7 @@ class RegisterController extends AbstractController
         EntityManagerInterface $em
     ): Response {
         if ($this->getUser()) {
-            return $this->redirectToRoute('app_home');
+            return $this->redirectToRoute('app_meubles');
         }
 
         $user = new User();
@@ -32,6 +33,9 @@ class RegisterController extends AbstractController
             );
             $user->setRoles(['ROLE_USER']);
             $user->setIsVerified(false);
+            $user->setIsActive(true);
+            $user->setCreatedAt(new \DateTimeImmutable());
+
             $em->persist($user);
             $em->flush();
 

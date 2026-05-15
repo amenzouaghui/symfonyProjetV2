@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+{% block title %}Détail Commande — SymHome{% endblock %}
+
+{% block body %}
+
+<nav style="background:#1a1a2e; padding:15px 40px; display:flex;
+            justify-content:space-between; align-items:center;">
+    <a href="{{ path('app_meubles') }}"
+       style="color:#c9a96e; font-size:1.5rem; font-weight:bold; text-decoration:none;">
+        🏠 SymHome
+    </a>
+    <div style="color:white;">
+        Bonjour <strong style="color:#c9a96e;">{{ app.user.prenom }}</strong> |
+        <a href="{{ path('app_logout') }}" style="color:#c9a96e;">Se déconnecter</a>
+    </div>
+</nav>
+
+<div style="background:#f8f5f0; min-height:80vh; padding:40px;">
+    <div style="max-width:800px; margin:0 auto;">
+
+        <a href="{{ path('app_commandes_historique') }}"
+           style="color:#c9a96e; text-decoration:none;">← Retour aux commandes</a>
+
+        <h1 style="color:#1a1a2e; margin:20px 0 30px;">
+            📦 Commande {{ commande.numero }}
+        </h1>
+
+        {# INFOS COMMANDE #}
+        <div style="background:white; border-radius:16px; padding:25px;
+                    margin-bottom:20px; box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+            <div style="display:flex; gap:30px; flex-wrap:wrap;">
+                <div>
+                    <p style="color:#888; font-size:0.85rem;">Date</p>
+                    <p style="font-weight:bold;">
+                        {{ commande.createdAt|date('d/m/Y à H:i') }}
+                    </p>
+                </div>
+                <div>
+                    <p style="color:#888; font-size:0.85rem;">Statut</p>
+                    <p style="font-weight:bold; color:#27ae60;">
+                        ✅ {{ commande.statut }}
+                    </p>
+                </div>
+                <div>
+                    <p style="color:#888; font-size:0.85rem;">Total</p>
+                    <p style="font-weight:bold; color:#c9a96e; font-size:1.2rem;">
+                        {{ commande.total|number_format(2, '.', ' ') }} TND
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        {# LIGNES DE COMMANDE #}
+        <div style="background:white; border-radius:16px; padding:25px;
+                    box-shadow:0 4px 15px rgba(0,0,0,0.08);">
+            <h2 style="color:#1a1a2e; margin-bottom:20px; font-size:1.1rem;">
+                🛋️ Articles commandés
+            </h2>
+
+            {% for ligne in lignes %}
+            <div style="display:flex; justify-content:space-between;
+                        align-items:center; padding:15px 0;
+                        border-bottom:1px solid #f0f0f0; gap:15px;">
+
+                <div style="display:flex; align-items:center; gap:15px; flex:1;">
+                    {% if ligne.meuble and ligne.meuble.image %}
+                        <img src="{{ ligne.meuble.image }}" alt="{{ ligne.nomMeuble }}"
+                             style="width:60px; height:60px; object-fit:cover;
+                                    border-radius:8px;">
+                    {% else %}
+                        <div style="width:60px; height:60px; background:#f0ece4;
+                                    display:flex; align-items:center;
+                                    justify-content:center; border-radius:8px;
+                                    font-size:1.5rem;">🛋️</div>
+                    {% endif %}
+                    <div>
+                        <p style="font-weight:bold; color:#1a1a2e; margin:0;">
+                            {{ ligne.nomMeuble }}
+                        </p>
+                        <p style="color:#888; font-size:0.85rem; margin:0;">
+                            {{ ligne.prixUnitaire|number_format(2, '.', ' ') }} TND / unité
+                        </p>
+                    </div>
+                </div>
+
+                <div style="text-align:center; min-width:60px;">
+                    <p style="color:#888; font-size:0.8rem; margin:0;">Qté</p>
+                    <p style="font-weight:bold; color:#1a1a2e; margin:0;">
+                        × {{ ligne.quantite }}
+                    </p>
+                </div>
+
+                <div style="text-align:right; min-width:100px;">
+                    <p style="color:#c9a96e; font-weight:bold; font-size:1.1rem; margin:0;">
+                        {{ (ligne.prixUnitaire * ligne.quantite)|number_format(2, '.', ' ') }} TND
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div style="display:flex; justify-content:space-between;
+                        padding:20px 0 0; margin-top:10px;">
+                <span style="font-size:1.2rem; font-weight:bold; color:#1a1a2e;">
+                    Total :
+                </span>
+                <span style="font-size:1.5rem; font-weight:bold; color:#c9a96e;">
+                    {{ commande.total|number_format(2, '.', ' ') }} TND
+                </span>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
