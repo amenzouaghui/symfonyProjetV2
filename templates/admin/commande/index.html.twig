@@ -1,0 +1,50 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Commande index{% endblock %}
+
+{% block body %}
+    <h1>Commande</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Client</th>
+                <th>Numero</th>
+                <th>Statut</th>
+                <th>Total</th>
+                <th>AdresseLivraison</th>
+                <th>StripePaymentId</th>
+                <th>PayeAt</th>
+                <th>CreatedAt</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commande in commandes %}
+            <tr>
+
+                <td>{{ commande.id }}</td>
+                <td>{{ commande.user.prenom }} {{ commande.user.nom }}</td>
+                <td>{{ commande.numero }}</td>
+                <td>{{ commande.statut }}</td>
+                <td>{{ commande.total }}</td>
+                <td>{{ commande.adresseLivraison }}</td>
+                <td>{{ commande.stripePaymentId }}</td>
+                <td>{{ commande.payeAt ? commande.payeAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ commande.createdAt ? commande.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <a href="{{ path('app_admin_commande_show', {'id': commande.id}) }}">show</a>
+                    
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    
+{% endblock %}

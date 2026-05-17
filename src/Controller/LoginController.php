@@ -15,7 +15,7 @@ class LoginController extends AbstractController
         if ($this->getUser()) {
             // ✅ Admin → espace admin
             if (in_array('ROLE_ADMIN', $this->getUser()->getRoles())) {
-                return $this->redirectToRoute('app_admin_dashboard');
+                return $this->redirectToRoute('admin_dashboard');
             }
             // ✅ User normal → meubles
             return $this->redirectToRoute('app_meubles');

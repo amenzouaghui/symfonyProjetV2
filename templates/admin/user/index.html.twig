@@ -1,0 +1,91 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+{% block page_title %}Gestion des utilisateurs{% endblock %}
+
+{% block body %}
+
+<div class="card p-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h5 class="mb-0">Liste des clients</h5>
+        <span class="badge bg-secondary">{{ users|length }} utilisateur(s)</span>
+    </div>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                
+                <th>Nom complet</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Rôle</th>
+                <th>Vérifié</th>
+                <th>Statut</th>
+                <th>Inscrit le</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            
+            <tr>
+                
+                <td>{{ user.prenom }} {{ user.nom }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.telephone ?? '-' }}</td>
+                <td>
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                        <span class="badge" style="background:#c9a96e;">Admin</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Client</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.isVerified %}
+                        <span class="badge bg-success">Vérifié</span>
+                    {% else %}
+                        <span class="badge bg-warning text-dark">Non vérifié</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if user.isActive %}
+                        <span class="badge bg-success">Actif</span>
+                    {% else %}
+                        <span class="badge bg-danger">Désactivé</span>
+                    {% endif %}
+                </td>
+                <td>{{ user.createdAt ? user.createdAt|date('d/m/Y') : '-' }}</td>
+                <td>
+                    <a href="{{ path('app_admin_user_edit', {'id': user.id}) }}" class="btn btn-sm btn-outline-primary">
+                        <i class="bi bi-pencil"></i> Modifier
+                    </a>
+
+                    {# Bouton Activer / Désactiver #}
+                    <form method="post" action="{{ path('app_admin_user_toggle', {'id': user.id}) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('toggle' ~ user.id) }}">
+                        {% if user.isActive %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                onclick="return confirm('Désactiver ce compte ?')">
+                                <i class="bi bi-slash-circle"></i> Désactiver
+                            </button>
+                        {% else %}
+                            <button type="submit" class="btn btn-sm btn-outline-success"
+                                onclick="return confirm('Activer ce compte ?')">
+                                <i class="bi bi-check-circle"></i> Activer
+                            </button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="9" class="text-center text-muted py-4">Aucun utilisateur trouvé</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+
+{% endblock %}

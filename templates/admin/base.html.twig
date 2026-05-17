@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin - SymHome{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        body { background: #f4f6f9; }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: #1a1a2e;
+            position: fixed;
+            top: 0; left: 0;
+            padding-top: 20px;
+            z-index: 100;
+        }
+
+        .sidebar .logo {
+            color: #c9a96e;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            padding: 10px 20px 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            padding: 12px 20px;
+            transition: 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(201,169,110,0.15);
+            color: #c9a96e;
+            border-left: 3px solid #c9a96e;
+        }
+
+        .sidebar .nav-label {
+            color: rgba(255,255,255,0.3);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 16px 20px 6px;
+        }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 30px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .topbar .page-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1a1a2e;
+        }
+
+        .topbar .admin-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+        }
+
+        .btn-primary { background: #c9a96e; border-color: #c9a96e; }
+        .btn-primary:hover { background: #b8935a; border-color: #b8935a; }
+
+        .alert { border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    {# ===== SIDEBAR ===== #}
+    <div class="sidebar">
+        <div class="logo">
+            <i class="bi bi-house-heart"></i> SymHome
+        </div>
+
+        <div class="nav-label">Principal</div>
+        <a href="{{ path('admin_dashboard') }}" class="{{ app.request.attributes.get('_route') == 'admin_dashboard' ? 'active' : '' }}">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </a>
+
+        <div class="nav-label">Catalogue</div>
+        <a href="{{ path('app_admin_categorie_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_admin_categorie' ? 'active' : '' }}">
+            <i class="bi bi-grid"></i> Catégories
+        </a>
+        <a href="{{ path('app_admin_meuble_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_admin_meuble' ? 'active' : '' }}">
+            <i class="bi bi-box-seam"></i> Meubles
+        </a>
+
+        <div class="nav-label">Ventes</div>
+        <a href="{{ path('app_admin_commande_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_admin_commande' ? 'active' : '' }}">
+            <i class="bi bi-bag-check"></i> Commandes
+        </a>
+
+        <div class="nav-label">Comptes</div>
+        <a href="{{ path('app_admin_user_index') }}" class="{{ app.request.attributes.get('_route') starts with 'app_admin_user' ? 'active' : '' }}">
+            <i class="bi bi-people"></i> Utilisateurs
+        </a>
+
+        <div class="nav-label">Session</div>
+        <a href="{{ path('app_logout') }}">
+            <i class="bi bi-box-arrow-left"></i> Déconnexion
+        </a>
+    </div>
+
+    {# ===== CONTENU PRINCIPAL ===== #}
+    <div class="main-content">
+
+        {# Topbar #}
+        <div class="topbar">
+            <div class="page-title">{% block page_title %}Administration{% endblock %}</div>
+            <div class="admin-info">
+                <i class="bi bi-person-circle"></i>
+                {{ app.user ? app.user.prenom ~ ' ' ~ app.user.nom : 'Admin' }}
+            </div>
+        </div>
+
+        {# Messages flash #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">{{ message }}</div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+
+        {# Contenu de chaque page #}
+        {% block body %}{% endblock %}
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

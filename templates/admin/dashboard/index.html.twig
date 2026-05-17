@@ -1,0 +1,42 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Dashboard - Admin{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block body %}
+<div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <div style="font-size:2rem; color:#c9a96e;">🛋️</div>
+            <div style="font-size:2rem; font-weight:600;">{{ nbMeubles }}</div>
+            <div style="color:#888;">Meubles</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <div style="font-size:2rem; color:#c9a96e;">👥</div>
+            <div style="font-size:2rem; font-weight:600;">{{ nbClients }}</div>
+            <div style="color:#888;">Clients</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <div style="font-size:2rem; color:#c9a96e;">🛒</div>
+            <div style="font-size:2rem; font-weight:600;">{{ nbCommandes }}</div>
+            <div style="color:#888;">Commandes</div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <div style="font-size:2rem; color:#c9a96e;">💰</div>
+            <div style="font-size:2rem; font-weight:600;">{{ ca|number_format(2, ',', ' ') }} DT</div>
+            <div style="color:#888;">Chiffre d'affaires</div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
